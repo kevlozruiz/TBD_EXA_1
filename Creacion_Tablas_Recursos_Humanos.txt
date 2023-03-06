@@ -1,0 +1,131 @@
+MySQL Shell 8.0.32
+
+Copyright (c) 2016, 2023, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': *************
+Save password for 'root@localhost'? [Y]es/[N]o/Ne[v]er (default No): N
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 11
+Server version: 8.0.32 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| agencia            |
+| ejemplo            |
+| evaluacion_1       |
+| information_schema |
+| mysql              |
+| ordenes_compra     |
+| performance_schema |
+| recursos_humanos   |
+| sakila             |
+| sys                |
+| tarjetas_credito   |
+| world              |
++--------------------+
+12 rows in set (0.0010 sec)
+ MySQL  localhost:3306 ssl  SQL > \use Recursos_Humanos
+Default schema set to `Recursos_Humanos`.
+Fetching global names, object names from `recursos_humanos` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > show tables;
+Empty set (0.0016 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > CREATE TABLE IF NOT EXISTS Empleados(
+                                                 -> empleado_id INT KEY,
+                                                 -> prefijo ENUM('Dr.','Drs.','Hon.','Mr.','Mrs.','Ms.','Prof.') NOT NULL,
+                                                 -> nombre VARCHAR(40) NOT NULL,
+                                                 -> inicial_segundo_nombre CHAR(1),
+                                                 -> apellido VARCHAR(60) NOT NULL,
+                                                 -> genero ENUM('M','F') NOT NULL,
+                                                 -> correo VARCHAR(80) NOT NULL,
+                                                 -> fecha_nacimiento DATETIME NOT NULL,
+                                                 -> peso int NOT NULL,
+                                                 -> nss varchar(10) NOT NULL,
+                                                 -> telefono varchar(10) NOT NULL,
+                                                 -> usuario varchar(20) NOT NULL,
+                                                 -> contrasena varchar(40) NOT NULL);
+Query OK, 0 rows affected (0.0284 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > DESC Empleados;
++------------------------+------------------------------------------------------+------+-----+---------+-------+
+| Field                  | Type                                                 | Null | Key | Default | Extra |
++------------------------+------------------------------------------------------+------+-----+---------+-------+
+| empleado_id            | int                                                  | NO   | PRI | NULL    |       |
+| prefijo                | enum('Dr.','Drs.','Hon.','Mr.','Mrs.','Ms.','Prof.') | NO   |     | NULL    |       |
+| nombre                 | varchar(40)                                          | NO   |     | NULL    |       |
+| inicial_segundo_nombre | char(1)                                              | YES  |     | NULL    |       |
+| apellido               | varchar(60)                                          | NO   |     | NULL    |       |
+| genero                 | enum('M','F')                                        | NO   |     | NULL    |       |
+| correo                 | varchar(80)                                          | NO   |     | NULL    |       |
+| fecha_nacimiento       | datetime                                             | NO   |     | NULL    |       |
+| peso                   | int                                                  | NO   |     | NULL    |       |
+| nss                    | varchar(10)                                          | NO   |     | NULL    |       |
+| telefono               | varchar(10)                                          | NO   |     | NULL    |       |
+| usuario                | varchar(20)                                          | NO   |     | NULL    |       |
+| contrasena             | varchar(40)                                          | NO   |     | NULL    |       |
++------------------------+------------------------------------------------------+------+-----+---------+-------+
+13 rows in set (0.0018 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > CREATE TABLE IF NOT EXISTS Padres(
+                                                 -> familiar_id INT AUTO_INCREMENT KEY,
+                                                 -> empleado_id INT NOT NULL,
+                                                 -> nombre_padre VARCHAR(60) NOT NULL,
+                                                 -> nombre_madre VARCHAR(60) NOT NULL,
+                                                 -> apellido_madre VARCHAR(60) NOT NULL);
+Query OK, 0 rows affected (0.0202 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > DESC Padres;
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| familiar_id    | int         | NO   | PRI | NULL    | auto_increment |
+| empleado_id    | int         | NO   |     | NULL    |                |
+| nombre_padre   | varchar(60) | NO   |     | NULL    |                |
+| nombre_madre   | varchar(60) | NO   |     | NULL    |                |
+| apellido_madre | varchar(60) | NO   |     | NULL    |                |
++----------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.0022 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > CREATE TABLE IF NOT EXISTS Contratos(
+                                                 -> contrato_id INT AUTO_INCREMENT KEY,
+                                                 -> empleado_id INT NOT NULL,
+                                                 -> fecha_ingreso DATETIME NOT NULL,
+                                                 -> salario INT NOT NULL,
+                                                 -> ultimo_aumento DECIMAL(5,2) NOT NULL);
+Query OK, 0 rows affected (0.0254 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > Desc Contratos;
++----------------+--------------+------+-----+---------+----------------+
+| Field          | Type         | Null | Key | Default | Extra          |
++----------------+--------------+------+-----+---------+----------------+
+| contrato_id    | int          | NO   | PRI | NULL    | auto_increment |
+| empleado_id    | int          | NO   |     | NULL    |                |
+| fecha_ingreso  | datetime     | NO   |     | NULL    |                |
+| salario        | int          | NO   |     | NULL    |                |
+| ultimo_aumento | decimal(5,2) | NO   |     | NULL    |                |
++----------------+--------------+------+-----+---------+----------------+
+5 rows in set (0.0018 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > CREATE TABLE IF NOT EXISTS Sucursales(
+                                                 -> sucursal_id INT AUTO_INCREMENT KEY,
+                                                 -> nombre_sucursal VARCHAR(40) NOT NULL,
+                                                 -> municipio VARCHAR(20) NOT NULL,
+                                                 -> ciudad VARCHAR(20) NOT NULL,
+                                                 -> estado CHAR(2) NOT NULL,
+                                                 -> codigo_postal CHAR(5) NOT NULL);
+Query OK, 0 rows affected (0.0233 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL > Desc Sucursales;
++-----------------+-------------+------+-----+---------+----------------+
+| Field           | Type        | Null | Key | Default | Extra          |
++-----------------+-------------+------+-----+---------+----------------+
+| sucursal_id     | int         | NO   | PRI | NULL    | auto_increment |
+| nombre_sucursal | varchar(40) | NO   |     | NULL    |                |
+| municipio       | varchar(20) | NO   |     | NULL    |                |
+| ciudad          | varchar(20) | NO   |     | NULL    |                |
+| estado          | char(2)     | NO   |     | NULL    |                |
+| codigo_postal   | char(5)     | NO   |     | NULL    |                |
++-----------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.0023 sec)
+ MySQL  localhost:3306 ssl  recursos_humanos  SQL >

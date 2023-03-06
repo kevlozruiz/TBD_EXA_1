@@ -1,0 +1,115 @@
+MySQL Shell 8.0.32
+
+Copyright (c) 2016, 2023, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': *************
+Save password for 'root@localhost'? [Y]es/[N]o/Ne[v]er (default No): N
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 10
+Server version: 8.0.32 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > \use ordenes_compra
+Default schema set to `ordenes_compra`.
+Fetching global names, object names from `ordenes_compra` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > CREATE TABLE IF NOT EXISTS Ordenes(
+                                               -> orden_id VARCHAR(20) KEY,
+                                               -> fecha_orden DATETIME NOT NULL,
+                                               -> fecha_envio DATETIME NOT NULL,
+                                               -> modo_envio ENUM('Primera Clase','Mismo Día','Segunda Clase','Clase Standard') NOT NULL,
+                                               -> cliente_id VARCHAR(15) NOT NULL,
+                                               -> direccion_envio int NOT NULL);
+Query OK, 0 rows affected (0.0421 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > desc ordenes;
++-----------------+--------------------------------------------------------------------+------+-----+---------+-------+
+| Field           | Type                                                               | Null | Key | Default | Extra |
++-----------------+--------------------------------------------------------------------+------+-----+---------+-------+
+| orden_id        | varchar(20)                                                        | NO   | PRI | NULL    |       |
+| fecha_orden     | datetime                                                           | NO   |     | NULL    |       |
+| fecha_envio     | datetime                                                           | NO   |     | NULL    |       |
+| modo_envio      | enum('Primera Clase','Mismo Día','Segunda Clase','Clase Standard') | NO   |     | NULL    |       |
+| cliente_id      | varchar(15)                                                        | NO   |     | NULL    |       |
+| direccion_envio | int                                                                | NO   |     | NULL    |       |
++-----------------+--------------------------------------------------------------------+------+-----+---------+-------+
+6 rows in set (0.0018 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > CREATE TABLE IF NOT EXISTS Clientes(
+                                               -> cliente_id VARCHAR(15) KEY,
+                                               -> nombre_completo VARCHAR(80) NOT NULL,
+                                               -> tipo_cliente ENUM('Consumidor','Corporativo','Oficina en Casa') NOT NULL);
+Query OK, 0 rows affected (0.0207 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > DESC clientes;
++-----------------+----------------------------------------------------+------+-----+---------+-------+
+| Field           | Type                                               | Null | Key | Default | Extra |
++-----------------+----------------------------------------------------+------+-----+---------+-------+
+| cliente_id      | varchar(15)                                        | NO   | PRI | NULL    |       |
+| nombre_completo | varchar(80)                                        | NO   |     | NULL    |       |
+| tipo_cliente    | enum('Consumidor','Corporativo','Oficina en Casa') | NO   |     | NULL    |       |
++-----------------+----------------------------------------------------+------+-----+---------+-------+
+3 rows in set (0.0020 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > CREATE TABLE IF NOT EXISTS Direcciones_Clientes(
+                                               -> direccion_id INT AUTO_INCREMENT KEY,
+                                               -> cliente_id VARCHAR(15) NOT NULL,
+                                               -> pais ENUM('Estados Unidos', 'México') NOT NULL,
+                                               -> ciudad VARCHAR(60) NOT NULL,
+                                               -> estado VARCHAR(60) NOT NULL,
+                                               -> codigo_postal CHAR(5) NOT NULL);
+Query OK, 0 rows affected (0.0214 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > DESC Direcciones_Clientes;
++---------------+---------------------------------+------+-----+---------+----------------+
+| Field         | Type                            | Null | Key | Default | Extra          |
++---------------+---------------------------------+------+-----+---------+----------------+
+| direccion_id  | int                             | NO   | PRI | NULL    | auto_increment |
+| cliente_id    | varchar(15)                     | NO   |     | NULL    |                |
+| pais          | enum('Estados Unidos','México') | NO   |     | NULL    |                |
+| ciudad        | varchar(60)                     | NO   |     | NULL    |                |
+| estado        | varchar(60)                     | NO   |     | NULL    |                |
+| codigo_postal | char(5)                         | NO   |     | NULL    |                |
++---------------+---------------------------------+------+-----+---------+----------------+
+6 rows in set (0.0017 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > CREATE TABLE IF NOT EXISTS Detalles_Ordenes(
+                                               -> detalle_id INT AUTO_INCREMENT KEY,
+                                               -> orden_id VARCHAR(20) NOT NULL,
+							     -> Modo_Envio enum('Primera Clase','Mismo Día','Segunda Clase','Clase Standard') NOT NULL,
+                                               -> producto_id VARCHAR(20) NOT NULL,
+                                               -> importe DECIMAL(5,2) NOT NULL,
+                                               -> cantidad INT NOT NULL,
+                                               -> descuento DECIMAL(5,2) NOT NULL,
+                                               -> ganancia DECIMAL(5,2) NOT NULL);
+Query OK, 0 rows affected (0.0218 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > DESC Detalles_Ordenes;
++-------------+--------------------------------------------------------------------+------+-----+---------+----------------+
+| Field       | Type                                                               | Null | Key | Default | Extra          |
++-------------+--------------------------------------------------------------------+------+-----+---------+----------------+
+| detalle_id  | int                                                                | NO   | PRI | NULL    | auto_increment |
+| orden_id    | varchar(20)                                                        | NO   |     | NULL    |                |
+| Modo_Envio  | enum('Primera Clase','Mismo Día','Segunda Clase','Clase Standard') | NO   |     | NULL    |                |
+| producto_id | varchar(20)                                                        | NO   |     | NULL    |                |
+| importe     | decimal(5,2)                                                       | NO   |     | NULL    |                |
+| cantidad    | int                                                                | NO   |     | NULL    |                |
+| descuento   | decimal(5,2)                                                       | NO   |     | NULL    |                |
+| ganancia    | decimal(5,2)                                                       | NO   |     | NULL    |                |
++-------------+--------------------------------------------------------------------+------+-----+---------+----------------+
+8 rows in set (0.0021 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > CREATE TABLE IF NOT EXISTS Productos(
+                                               -> producto_id VARCHAR(20) KEY,
+                                               -> categoria VARCHAR(40) NOT NULL,
+                                               -> subcategoria VARCHAR(40) NOT NULL,
+                                               -> nombre_producto VARCHAR(80) NOT NULL);
+Query OK, 0 rows affected (0.0227 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL > DESC Productos;
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| producto_id     | varchar(20)  | NO   | PRI | NULL    |       |
+| categoria       | varchar(40)  | NO   |     | NULL    |       |
+| subcategoria    | varchar(40)  | NO   |     | NULL    |       |
+| nombre_producto | varchar(80)  | NO   |     | NULL    |       |
++-----------------+--------------+------+-----+---------+-------+
+4 rows in set (0.0021 sec)
+ MySQL  localhost:3306 ssl  ordenes_compra  SQL >
